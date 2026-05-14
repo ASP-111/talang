@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的个人主页</title>
+    <style>
+        /* ========== 全局样式 ========== */
+        :root {
+            --bg: #0f0f1a;
+            --surface: #1a1a2e;
+            --surface-light: #222240;
+            --primary: #6c5ce7;
+            --primary-light: #a29bfe;
+            --accent: #00cec9;
+            --text: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --border: #2a2a45;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --radius: 16px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            min-height: 100vh;
+            background-image:
+                radial-gradient(ellipse at 20% 20%, rgba(108, 92, 231, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 60%, rgba(0, 206, 201, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 50% 80%, rgba(108, 92, 231, 0.04) 0%, transparent 50%);
+        }
+
+        /* ========== 导航栏 ========== */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(15, 15, 26, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+            transition: var(--transition);
+        }
+
+        .navbar .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-logo span {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 4px 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 1px;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .btn-contact {
+            background: var(--primary);
+            color: #fff !important;
+            padding: 0.55rem 1.4rem !important;
+            border-radius: 50px;
+            font-weight: 600 !important;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-contact:hover {
+            background: #7d6ff0;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4);
+        }
+        .btn-contact::after {
+            display: none !important;
+        }
+
+        /* 移动端菜单按钮 */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            flex-direction: column;
+            gap: 5px;
+            z-index: 101;
+        }
+        .menu-toggle span {
+            display: block;
+            width: 26px;
+            height: 2.5px;
+            background: #fff;
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        /* ========== Hero 区域 ========== */
+        .hero {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 5rem 2rem 4rem;
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-content {
+            flex: 1 1 400px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(108, 92, 231, 0.2);
+            color: var(--primary-light);
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.2rem, 5vw, 3.4rem);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.2rem;
+            letter-spacing: -1px;
+        }
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--primary-light), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin-bottom: 2rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.7rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #7d6ff0;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(108, 92, 231, 0.45);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #fff;
+            border: 2px solid var(--border);
+        }
+        .btn-outline:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 206, 201, 0.2);
+        }
+
+        /* 头像/装饰 */
+        .hero-visual {
+            flex: 0 0 260px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .avatar-wrapper {
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            padding: 4px;
+            animation: float 6s ease-in-out infinite;
+            box-shadow: 0 20px 50px rgba(108, 92, 231, 0.35);
+        }
+        .avatar-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+        }
+
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-16px);
+            }
+        }
+
+        /* ========== 卡片区域 ========== */
+        .section {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 3rem 2rem 5rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            font-size: 1rem;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem 1.8rem;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+        .card:hover {
+            border-color: #3d3d60;
+            transform: translateY(-6px);
+            box-shadow: var(--shadow);
+        }
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        .card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.6rem;
+            font-weight: 600;
+        }
+        .card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ========== 页脚 ========== */
+        .footer {
+            text-align: center;
+            padding: 2.5rem 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        .footer .heart {
+            color: #e74c3c;
+            animation: pulse 1.2s ease-in-out infinite;
+            display: inline-block;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.3);
+            }
+        }
+
+        /* ========== 响应式 ========== */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                max-width: 320px;
+                height: 100vh;
+                background: var(--surface);
+                flex-direction: column;
+                padding: 5rem 2rem 2rem;
+                gap: 1.8rem;
+                transition: var(--transition);
+                box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
+                z-index: 100;
+            }
+            .nav-links.active {
+                right: 0;
+            }
+            .menu-toggle {
+                display: flex;
+            }
+            .hero {
+                flex-direction: column-reverse;
+                text-align: center;
+                padding: 3rem 1.5rem;
+            }
+            .hero p {
+                max-width: 100%;
+            }
+            .hero-buttons {
+                justify-content: center;
+            }
+            .avatar-wrapper {
+                width: 180px;
+                height: 180px;
+            }
+            .avatar-inner {
+                font-size: 3.8rem;
+            }
+            .section {
+                padding: 2rem 1.2rem 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== 导航栏 ==================== -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="nav-logo">&lt;<span>Dev</span>/&gt;</a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#about">关于我</a></li>
+                <li><a href="#skills">技能</a></li>
+                <li><a href="#projects">项目</a></li>
+                <li><a href="#contact" class="btn-contact">联系我</a></li>
+            </ul>
+            <button class="menu-toggle" id="menuToggle" aria-label="菜单">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ==================== 英雄区域 ==================== -->
+    <section class="hero" id="about">
+        <div class="hero-content">
+            <span class="hero-badge">🚀 欢迎来访</span>
+            <h1>你好，我是<span class="highlight">林小风</span></h1>
+            <p>
+                一名热爱技术、喜欢创造的全栈开发者。
+                专注于构建优雅、高效的Web应用，用代码让世界变得更美好一点点。
+            </p>
+            <div class="hero-buttons">
+                <a href="#projects" class="btn btn-primary">📁 查看作品</a>
+                <a href="#contact" class="btn btn-outline">💬 联系我</a>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="avatar-wrapper">
+                <div class="avatar-inner">🧑‍💻</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 技能卡片 ==================== -->
+    <section class="section" id="skills">
+        <h2 class="section-title">🛠️ 我的技能</h2>
+        <p class="section-subtitle">不断学习，持续精进</p>
+        <div class="card-grid">
+            <div class="card">
+                <span class="card-icon">🎨</span>
+                <h3>前端开发</h3>
+                <p>精通 HTML/CSS/JavaScript，熟悉 Vue.js 和 React 生态，追求像素级还原与丝滑交互体验。</p>
+            </div>
+            <div class="card">
+                <span class="card-icon">⚙️</span>
+                <h3>后端开发</h3>
+                <p>熟练使用 Node.js 和 Python，掌握 RESTful API 设计，具备数据库设计与优化能力。</p>
+            </div>
+            <div class="card">
+                <span class="card-icon">📱</span>
+                <h3>响应式设计</h3>
+                <p>所有项目均适配手机、平板与桌面端，确保在各种设备上都有出色的浏览体验。</p>
+            </div>
+            <div class="card">
+                <span class="card-icon">🔒</span>
+                <h3>安全最佳实践</h3>
+                <p>关注Web安全，在开发中融入 XSS 防护、HTTPS、身份验证等安全措施。</p>
+            </div>
+            <div class="card">
+                <span class="card-icon">☁️</span>
+                <h3>云服务部署</h3>
+                <p>熟悉 Docker、Nginx 及云服务器运维，能够独立完成项目从开发到上线的全流程。</p>
+            </div>
+            <div class="card">
+                <span class="card-icon">🤝</span>
+                <h3>团队协作</h3>
+                <p>熟练使用 Git 进行版本控制，遵循敏捷开发流程，善于沟通与知识分享。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 项目展示 ==================== -->
+    <section class="section" id="projects">
+        <h2 class="section-title">📂 精选项目</h2>
+        <p class="section-subtitle">每一个项目都是一次成长的印记</p>
+        <div class="card-grid">
+            <div class="card" onclick="alert('项目详情：一个基于AI的智能任务管理工具 🚀')">
+                <span class="card-icon">🤖</span>
+                <h3>智能任务管家</h3>
+                <p>集成AI辅助的任务管理应用，自动分类、智能提醒，让工作效率翻倍。</p>
+            </div>
+            <div class="card" onclick="alert('项目详情：实时数据可视化大屏 📊')">
+                <span class="card-icon">📊</span>
+                <h3>数据可视化大屏</h3>
+                <p>基于 ECharts 的实时数据监控面板，支持动态刷新与多维度数据下钻分析。</p>
+            </div>
+            <div class="card" onclick="alert('项目详情：极简在线协作白板 ✏️')">
+                <span class="card-icon">✏️</span>
+                <h3>在线协作白板</h3>
+                <p>支持多人实时协作的在线白板工具，低延迟同步，灵感即刻共享。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 联系区域 ==================== -->
+    <section class="section" id="contact" style="text-align: center;">
+        <h2 class="section-title">📬 期待你的来信</h2>
+        <p class="section-subtitle">无论是合作邀请还是技术交流，都很乐意收到你的消息</p>
+        <div style="margin-top: 1rem;">
+            <a href="mailto:example@email.com" class="btn btn-primary" style="font-size: 1rem; padding: 0.8rem 2.2rem;">
+                ✉️ 发送邮件
+            </a>
+        </div>
+        <p style="margin-top: 1.5rem; color: var(--text-secondary); font-size: 0.9rem;">
+            📧 example@email.com &nbsp;|&nbsp; 💬 微信：linxiaofeng_dev
+        </p>
+    </section>
+
+    <!-- ==================== 页脚 ==================== -->
+    <footer class="footer">
+        <p>© 2025 林小风 · 用 <span class="heart">❤️</span> 构建 · 保留所有权利</p>
+        <p style="font-size: 0.8rem; margin-top: 0.3rem;">HTML · CSS · JavaScript — 纯手工打造</p>
+    </footer>
+
+    <!-- ==================== 简单脚本 ==================== -->
+    <script>
+        // 移动端菜单切换
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // 点击导航链接后关闭菜单
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // 点击页面其他区域关闭菜单
+        document.addEventListener('click', (e) => {
+            if (!menuToggle.contains(e.target) && !navLinks.contains(e.target)) {
+                navLinks.classList.remove('active');
+            }
+        });
+
+        // 控制台欢迎信息
+        console.log('%c👋 欢迎来到我的个人主页！',
+            'font-size: 1.4rem; color: #6c5ce7; font-weight: bold;');
+        console.log('%c如果你对代码感兴趣，欢迎交流~',
+            'font-size: 0.9rem; color: #00cec9;');
+    </script>
+
+</body>
+</html>
